@@ -24,4 +24,14 @@ routes.get('/items', itemsConstroller.index);
  */
 routes.post('/points', pointsController.create);
 
+/**
+ * @description: rota responsável por listar todos os pontos de coleta.
+ */
+routes.get('/points', pointsController.index);
+
+/**
+ * @description: rota responsável por listar um ponto de coleta.
+ */
+routes.get('/points/:id', pointsController.show);
+
 export default routes;
