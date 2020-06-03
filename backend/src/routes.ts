@@ -1,70 +1,27 @@
 /**
  * @file: routes.ts
  * @author: Paulo Alves
- * @description: responsável pela configuração das rotas da apicação.
+ * @description: responsável pela chamada das rotas da apicação.
  * @version 1.0.1 (02/06/2020)
  */
 
-import express, { request, response } from 'express';
-import knex from './database/connection';
+import express from 'express';
+
+import PointsController from './controllers/PointsController';
+import ItemsConstroller from './controllers/ItemsConstroller';
 
 const routes = express.Router();
+const pointsController = new PointsController();
+const itemsConstroller = new ItemsConstroller();
 
 /**
- * @description: GET - rota responsável por listar todos os itens.
+ * @description: rota responsável por listar todos os itens.
  */
-routes.get('/items', async (request, response) => {
-    const items = await knex('items').select('*');
-    const serializedItems = items.map(item => {
-        return {
-            id: item.id,
-            title: item.title,
-            image_url: `http://localhost:3333/uploads/${item.image}`
-        };      
-    });
-    return response.json(serializedItems);    
-});
+routes.get('/items', itemsConstroller.index);
 
 /**
- * @description: POST - rota responsável por inserir pontos de coleta.
+ * @description: rota responsável por inserir pontos de coleta.
  */
-routes.post('/points', async (request, response) => {
-    const {
-        name,
-        email,
-        whatsapp,
-        latitude,
-        longitude,
-        city,
-        uf,
-        items
-    } = request.body;
-
-    const trx = await knex.transaction();
-    
-    const insertedIds = await trx('points').insert({
-        image: 'image-fake',
-        name,
-        email,
-        whatsapp,
-        latitude,
-        longitude,
-        city,
-        uf
-    });
-
-    const point_id = insertedIds[0];
-
-    const pointItems = items.map((item_id: number) => {
-        return {
-            item_id,
-            point_id,
-        };
-    });
-    
-    await trx('point_items').insert(pointItems);
-
-    return response.json({ success: true });
-});
+routes.post('/points', pointsController.create);
 
 export default routes;
