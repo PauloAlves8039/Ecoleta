@@ -1,3 +1,10 @@
+/**
+ * @file: index.tsx
+ * @author: Paulo Alves
+ * @description: define a criação da página Home.
+ * @version 1.0.1 (03/06/2020)
+ */
+
 import React from 'react';
 import { FiLogIn } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
@@ -6,6 +13,9 @@ import './style.css';
 
 import logo from '../../assets/logo.svg';
 
+/**
+ * @description retorna a criação do elementos da página Home.
+ */
 const Home = () => {
     return (
         <div id="page-home">
