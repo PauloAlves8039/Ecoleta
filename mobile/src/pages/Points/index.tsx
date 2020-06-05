@@ -5,114 +5,140 @@
  * @version 1.0.1 (04/06/2020)
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
+import api from '../../services/api';
 
+/**
+ * Responsável por atribuir um formato nas propriedades dos itens.
+ * @interface 
+ */
+interface Item {
+  id: number;
+  title: string;
+  image_url: string;
+}
+
+/**
+ * @description retorna a criação do elementos da view ponto de coleta.
+ */
 const Points = () => {
     
-    const navigation = useNavigation();
+  const [items, setItems] = useState<Item[]>([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-    /**
-     * Realiza um navegação ate a view Home.
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    api.get('items').then(response => {
+      setItems(response.data);
+    });
+  }, []);
+
+  /**
+   * Realiza um navegação ate a view Home.
+   * @function
+   * @name handleNavigateBack
+   */
+  function handleNavigateBack() {
+    navigation.goBack();
+  }
+
+  /**
+   * Realiza uma navegação ate a view detail. 
+   * @function
+   * @name handleNavigateToDetail
+   */
+  function handleNavigateToDetail() {
+    navigation.navigate('Detail');
+  }
+
+  /**
+     * Responsável por selecionar itens para o ponto de coleta. 
      * @function
-     * @name handleNavigateBack
+     * @name handleSelectItem
+     * @param id parâmetro para seleção de item. 
      */
-    function handleNavigateBack() {
-        navigation.goBack();
-    }
+    function handleSelectItem(id: number) {
+      const alreadySelected = selectedItems.findIndex(item => item === id);
+          
+      if (alreadySelected >= 0) {
+          const filteredItems = selectedItems.filter(item => item !== id);
+          setSelectedItems(filteredItems);
+      } else {
+          setSelectedItems([ ...selectedItems, id ]);
+      }       
+  }
 
-    /**
-     * Realiza uma navegação ate a view detail. 
-     * @function
-     * @name handleNavigateToDetail
-     */
-    function handleNavigateToDetail() {
-        navigation.navigate('Detail');
-    }
+  return (
+    <>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleNavigateBack}>
+          <Icon name="arrow-left" size={20} color="#34cb79" />
+        </TouchableOpacity>
 
-    return (
-        <>
-            <View style={styles.container}>
-                <TouchableOpacity onPress={handleNavigateBack}>
-                    <Icon name="arrow-left" size={20} color="#34cb79" />
-                </TouchableOpacity>
+        <Text style={styles.title}>Bem vindo.</Text>
+        <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
 
-                <Text style={styles.title}>Bem vindo.</Text>
-                <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: -8.0631617,
+              longitude: -34.8732775,
+              latitudeDelta: 0.13,
+              longitudeDelta: 0.13,
+            }}
+          >
+            <Marker
+              style={styles.mapMarker}
+              onPress={handleNavigateToDetail}
+              coordinate={{
+                latitude: -8.0631617,
+                longitude: -34.8732775,
+              }}
+            >
+              <View style={styles.mapMarkerContainer}>
+                <Image
+                  style={styles.mapMarkerImage}
+                  source={{ uri: 'https://images.unsplash.com/photo-1556767576-5ec41e3239ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60' }} />
+                <Text style={styles.mapMarkerTitle}>Mercado</Text>
+              </View>
+            </Marker>
+          </MapView>
+        </View>
 
-                <View style={styles.mapContainer}>
-                    <MapView 
-                        style={styles.map} 
-                        initialRegion={{
-                          latitude: -8.0631617,
-                          longitude: -34.8732775,
-                          latitudeDelta: 0.13,
-                          longitudeDelta: 0.13,
-                        }}
-                      >
-                        <Marker 
-                          style={styles.mapMarker}
-                          onPress={handleNavigateToDetail}
-                          coordinate={{
-                            latitude: -8.0631617,
-                            longitude: -34.8732775,
-                          }}
-                        >
-                          <View style={styles.mapMarkerContainer}>
-                              <Image 
-                              style={styles.mapMarkerImage} 
-                              source={{ uri: 'https://images.unsplash.com/photo-1556767576-5ec41e3239ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60' }} />
-                              <Text style={styles.mapMarkerTitle}>Mercado</Text>
-                          </View>
-                        </Marker>
-                      </MapView>
-                </View>
+      </View>
+      <View style={styles.itemsContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+        >
+          {items.map(item => (
+            <TouchableOpacity
+              key={String(item.id)}
+              style={[
+                styles.item,
+                selectedItems.includes(item.id) ? styles.selectedItem : {}
+              ]}
+              onPress={() => handleSelectItem(item.id)}
+              activeOpacity={0.6}
+            >
+              <SvgUri width={42} height={42} uri={item.image_url} />
+              <Text style={styles.itemTitle}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
 
-            </View>
-            <View style={styles.itemsContainer}>
-              <ScrollView 
-                horizontal 
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 20 }}
-              >
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.item} onPress={() => {}}>
-                    <SvgUri width={42} height={42} uri="http://10.0.2.2:3333/uploads/lampadas.svg" />
-                    <Text style={styles.itemTitle}>Lâmpadas</Text>
-                </TouchableOpacity>
-                </ScrollView>
-            </View>
-        </>
-    ); 
+        </ScrollView>
+      </View>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

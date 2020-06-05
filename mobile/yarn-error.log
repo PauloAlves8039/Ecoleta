@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-svg@11.0.1
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add expo-font@~8.1.0 @expo-google-fonts/ubuntu @expo-google-fonts/roboto
 
 PATH: 
   C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\Java\jdk-11.0.7\bin;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Users\Paulo\AppData\Local\Microsoft\WindowsApps;C:\Users\Paulo\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\MongoDB\Server\3.4\bin;C:\Users\Paulo\AppData\Local\Yarn\bin;C:\Program Files\Java\jdk-11.0.7\bin;C:\Users\Paulo\AppData\Roaming\npm
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\Paulo\Documents\Projetos\Javascript\Rocketseat\ecoleta\mobile\node_modules\@babel\compat-data\node_modules\.bin'
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Paulo\Documents\Projetos\Javascript\Rocketseat\ecoleta\mobile\node_modules\@react-native-community\cli-tools\node_modules\.bin'
 
 npm manifest: 
   {
@@ -32,9 +32,10 @@ npm manifest:
       "@react-native-community/masked-view": "0.1.6",
       "@react-navigation/native": "^5.5.0",
       "@react-navigation/stack": "^5.4.1",
+      "axios": "^0.19.2",
       "expo": "~37.0.3",
       "expo-constants": "~9.0.0",
-      "expo-font": "~8.1.0",
+      "expo-font": "^8.1.1",
       "react": "~16.9.0",
       "react-dom": "~16.9.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
@@ -43,6 +44,7 @@ npm manifest:
       "react-native-reanimated": "~1.7.0",
       "react-native-safe-area-context": "0.7.3",
       "react-native-screens": "~2.2.0",
+      "react-native-svg": "^12.1.0",
       "react-native-web": "~0.11.7"
     },
     "devDependencies": {
