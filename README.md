@@ -1,5 +1,8 @@
 <p align="center">
   <img src="https://github.com/PauloAlves8039/Ecoleta/blob/master/mobile/src/assets/img/Logo-NLW.svg" title="Next Level Week">
+</p>
+
+<p align="center">
   <a href="https://rocketseat.com.br/"><img src="https://img.shields.io/badge/developed%20by-Rocketseat-blueviolet"></a>
 </p>
 
