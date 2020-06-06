@@ -7,10 +7,15 @@
 
 import express from 'express';
 
+import multer from 'multer';
+import multerConfig from './config/multer';
+
 import PointsController from './controllers/PointsController';
 import ItemsConstroller from './controllers/ItemsConstroller';
 
 const routes = express.Router();
+const upload = multer(multerConfig);
+
 const pointsController = new PointsController();
 const itemsConstroller = new ItemsConstroller();
 
@@ -22,7 +27,7 @@ routes.get('/items', itemsConstroller.index);
 /**
  * @description: rota responsável por inserir pontos de coleta.
  */
-routes.post('/points', pointsController.create);
+routes.post('/points', upload.single('image'), pointsController.create);
 
 /**
  * @description: rota responsável por listar todos os pontos de coleta.
